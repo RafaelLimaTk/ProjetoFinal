@@ -20,16 +20,16 @@ public class AddEstablishmentCommandHandler : CommandHandler, IRequestHandler<Ad
     {
         if (!message.IsValid()) return message.ValidationResult;
 
-        var existinEstablishment = _establishmentRepository.GetById(message.Id);
+        var establishment = new Establishment(
+            message.Id, message.Name, message.Local, message.ImgURL, message.Detail, message.Favorite, message.QuantityPeople, message.NominatedAudience);
+
+        var existinEstablishment = await _establishmentRepository.GetById(establishment.Id);
 
         if (existinEstablishment != null)
         {
             AddErro("O estabelecimento já existe.");
             return ValidationResult;
         }
-
-        var establishment = new Establishment(
-            message.Id, message.Name, message.Local, message.ImgURL, message.Detail, message.Favorite, message.QuantityPeople, message.NominatedAudience);
 
         _establishmentRepository.Add(establishment);
 

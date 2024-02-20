@@ -1,35 +1,26 @@
-namespace PF.Reserva.API
+using PF.Reserva.API.Configuration;
+
+namespace PF.Reserva.API;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+        builder.Services.AddApiConfiguration(builder.Configuration);
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+        builder.Services.RegisterServices();
 
-            var app = builder.Build();
+        builder.Services.AddSwaggerConfiguration();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+        var myhandlers = AppDomain.CurrentDomain.Load("PF.Core");
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(myhandlers));
 
-            app.UseHttpsRedirection();
+        var app = builder.Build();
 
-            app.UseAuthorization();
+        app.UseApiConfiguration();
 
-
-            app.MapControllers();
-
-            app.Run();
-        }
+        app.Run();
     }
 }

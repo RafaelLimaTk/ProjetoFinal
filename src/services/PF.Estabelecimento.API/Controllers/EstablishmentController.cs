@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PF.Core.Mediator;
 using PF.Estabelecimento.API.Application.Commands;
+using PF.Estabelecimento.API.Application.DTOs;
 using PF.Estabelecimento.API.Controllers.Base;
-using PF.Estabelecimento.API.DTOs;
 using PF.Estabelecimento.API.Models;
 
 namespace PF.Estabelecimento.API.Controllers;
