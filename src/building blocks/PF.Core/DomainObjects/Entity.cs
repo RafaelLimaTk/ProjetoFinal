@@ -1,4 +1,6 @@
-﻿namespace PF.Core.DomainObjects;
+﻿using PF.Core.Messages;
+
+namespace PF.Core.DomainObjects;
 
 public abstract class Entity
 {
