@@ -14,18 +14,18 @@ public abstract class Entity
     private List<Event> _notificacoes;
     public IReadOnlyCollection<Event> Notificacoes => _notificacoes?.AsReadOnly();
 
-    public void AdicionarEvento(Event evento)
+    public void AddEvent(Event evento)
     {
         _notificacoes = _notificacoes ?? new List<Event>();
         _notificacoes.Add(evento);
     }
 
-    public void RemoverEvento(Event eventItem)
+    public void RemoveEvent(Event eventItem)
     {
         _notificacoes?.Remove(eventItem);
     }
 
-    public void LimparEventos()
+    public void ClearEvents()
     {
         _notificacoes?.Clear();
     }

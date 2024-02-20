@@ -13,7 +13,7 @@ public abstract class Command : Message, IRequest<ValidationResult>
         Timestamp = DateTime.Now;
     }
 
-    public virtual bool EhValido()
+    public virtual bool IsValid()
     {
         throw new NotImplementedException();
     }

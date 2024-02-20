@@ -1,24 +1,26 @@
 using PF.Estabelecimento.API.Configuration;
 
-namespace PF.Estabelecimento.API
+namespace PF.Estabelecimento.API;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddApiConfiguration(builder.Configuration);
+        builder.Services.AddApiConfiguration(builder.Configuration);
 
-            builder.Services.RegisterServices();
+        builder.Services.RegisterServices();
 
-            builder.Services.AddSwaggerConfiguration();
+        builder.Services.AddSwaggerConfiguration();
 
-            var app = builder.Build();
+        var myhandlers = AppDomain.CurrentDomain.Load("PF.Core");
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(myhandlers));
 
-            app.UseApiConfiguration();
+        var app = builder.Build();
 
-            app.Run();
-        }
+        app.UseApiConfiguration();
+
+        app.Run();
     }
 }
