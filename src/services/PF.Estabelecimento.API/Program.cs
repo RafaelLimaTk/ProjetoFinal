@@ -14,6 +14,8 @@ public class Program
 
         builder.Services.AddSwaggerConfiguration();
 
+        builder.Services.AddMessageBusConfiguration(builder.Configuration);
+
         var myhandlers = AppDomain.CurrentDomain.Load("PF.Core");
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(myhandlers));
 

@@ -1,5 +1,4 @@
 ﻿using EasyNetQ;
-using EasyNetQ.Internals;
 using Polly;
 using RabbitMQ.Client.Exceptions;
 using PF.Core.Messages.Integration;
@@ -9,6 +8,7 @@ namespace PF.MessageBus;
 public class MessageBus : IMessageBus
 {
     private IBus _bus;
+    private IAdvancedBus _advancedBus;
     private readonly string _connectionString;
 
     public MessageBus(string connectionString)
@@ -65,11 +65,12 @@ public class MessageBus : IMessageBus
         return _bus.Rpc.Respond(responder);
     }
 
-    public AwaitableDisposable<IDisposable> RespondAsync<TRequest, TResponse>(Func<TRequest, Task<TResponse>> responder)
+    public async Task<IDisposable> RespondAsync<TRequest, TResponse>(Func<TRequest, Task<TResponse>> responder)
         where TRequest : IntegrationEvent where TResponse : ResponseMessage
     {
         TryConnect();
-        return _bus.Rpc.RespondAsync(responder);
+        var awaitableDisposable = _bus.Rpc.RespondAsync(responder);
+        return await awaitableDisposable;
     }
 
     private void TryConnect()
@@ -84,9 +85,18 @@ public class MessageBus : IMessageBus
         policy.Execute(() =>
         {
             _bus = RabbitHutch.CreateBus(_connectionString);
-            //_advancedBus = _bus.Advanced;
-            //_advancedBus.Disconnected += OnDisconnect;
+            _advancedBus = _bus.Advanced;
+            _advancedBus.Disconnected += OnDisconnect;
         });
+    }
+
+    private void OnDisconnect(object s, EventArgs e)
+    {
+        var policy = Policy.Handle<EasyNetQException>()
+            .Or<BrokerUnreachableException>()
+            .RetryForever();
+
+        policy.Execute(TryConnect);
     }
 
     public void Dispose()

@@ -4,9 +4,9 @@ using PF.Reserva.API.Models;
 
 namespace PF.Reserva.API.Data.Mappings;
 
-public class ReserveMapping : IEntityTypeConfiguration<Reserve>
+public class ReserveMapping : IEntityTypeConfiguration<Reserver>
 {
-    public void Configure(EntityTypeBuilder<Reserve> builder)
+    public void Configure(EntityTypeBuilder<Reserver> builder)
     {
         builder.HasKey(r => r.Id);
 

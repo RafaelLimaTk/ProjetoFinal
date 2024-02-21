@@ -2,7 +2,7 @@
 
 namespace PF.Reserva.API.Models;
 
-public class Reserve : Entity, IAggregateRoot
+public class Reserver : Entity, IAggregateRoot
 {
     internal const decimal BASE_PRICE = 800;
     internal const decimal ADDITIONAL_PERSON_PRICE = 3.5M;
@@ -16,7 +16,7 @@ public class Reserve : Entity, IAggregateRoot
     public decimal TotalPrice { get; private set; }
     public string Comments { get; private set; }
 
-    public Reserve(Guid establishmentId, DateTime startDate, DateTime endDate, int numberOfPeople, decimal totalPrice, string comments)
+    public Reserver(Guid establishmentId, DateTime startDate, DateTime endDate, int numberOfPeople, decimal totalPrice, string comments)
     {
         Id = Guid.NewGuid();
         EstablishmentId = establishmentId;

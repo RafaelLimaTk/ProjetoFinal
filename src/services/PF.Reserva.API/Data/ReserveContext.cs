@@ -11,7 +11,7 @@ public class ReserveContext : DbContext, IUnitOfWork
     public ReserveContext(DbContextOptions<ReserveContext> options)
         : base(options) { }
 
-    public DbSet<Reserve> Reserves { get; set; }
+    public DbSet<Reserver> Reserves { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,4 +1,5 @@
 using PF.Reserva.API.Configuration;
+using PF.Reserve.API.Configuration;
 
 namespace PF.Reserva.API;
 
@@ -13,6 +14,8 @@ public class Program
         builder.Services.RegisterServices();
 
         builder.Services.AddSwaggerConfiguration();
+
+        builder.Services.AddMessageBusConfiguration(builder.Configuration);
 
         var myhandlers = AppDomain.CurrentDomain.Load("PF.Core");
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(myhandlers));

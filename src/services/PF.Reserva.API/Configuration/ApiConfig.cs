@@ -39,7 +39,6 @@ public static class ApiConfig
 
         app.UseAuthorization();
 
-
         app.MapControllers();
     }
 }

@@ -2,11 +2,11 @@
 
 namespace PF.Reserva.API.Models;
 
-public interface IReserveRepository : IRepository<Reserve>
+public interface IReserveRepository : IRepository<Reserver>
 {
-    Task<IEnumerable<Reserve>> GetAll();
-    Task<Reserve> GetById(Guid id);
-    void Add(Reserve reserve);
-    void Update(Reserve reserve);
-    void Delete(Reserve reserve);
+    Task<IEnumerable<Reserver>> GetAll();
+    Task<Reserver> GetById(Guid id);
+    void Add(Reserver reserve);
+    void Update(Reserver reserve);
+    void Delete(Reserver reserve);
 }

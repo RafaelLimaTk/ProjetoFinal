@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PF.Core.Mediator;
+using PF.Core.Messages.Integration;
 using PF.Estabelecimento.API.Application.Commands;
 using PF.Estabelecimento.API.Application.DTOs;
 using PF.Estabelecimento.API.Controllers.Base;
 using PF.Estabelecimento.API.Models;
+using PF.MessageBus;
 
 namespace PF.Estabelecimento.API.Controllers;
 
@@ -11,11 +13,13 @@ public class EstablishmentController : MainController
 {
     private readonly IEstablishmentRepository _establishmentRepository;
     private readonly IMediatorHandler _mediatorHandler;
+    private readonly IMessageBus _bus;
 
-    public EstablishmentController(IEstablishmentRepository establishmentRepository, IMediatorHandler mediatorHandler)
+    public EstablishmentController(IEstablishmentRepository establishmentRepository, IMediatorHandler mediatorHandler, IMessageBus bus)
     {
         _establishmentRepository = establishmentRepository;
         _mediatorHandler = mediatorHandler;
+        _bus = bus;
     }
 
     [HttpGet("estabelecimentos")]
@@ -46,5 +50,23 @@ public class EstablishmentController : MainController
             new UpdateEstablishmentCommand(establishment.Id, establishment.Name, establishment.Local, establishment.ImgURL, establishment.Detail, establishment.Favorite, establishment.QuantityPeople, establishment.NominatedAudience));
 
         return CustomResponse(resultEstablishment);
+    }
+
+    [HttpPost("reservar-estabelecimento")]
+    public async Task<ActionResult<Establishment>> ReserverEstablishment(ReservationStartedIntegrationEvent establishment)
+    {
+        var reserveResult = await CreateReserve(establishment);
+
+        if (!reserveResult.ValidationResult.IsValid) return CustomResponse(reserveResult.ValidationResult);
+
+        return CustomResponse();
+    }
+
+    private async Task<ResponseMessage> CreateReserve(ReservationStartedIntegrationEvent establishment)
+    {
+        var createReserve = new ReservationStartedIntegrationEvent(
+            establishment.EstablishmentId, establishment.StartDate, establishment.EndDate, establishment.NumberOfPeople, establishment.TotalPrice, establishment.Comments);
+
+        return await _bus.RequestAsync<ReservationStartedIntegrationEvent, ResponseMessage>(createReserve);
     }
 }

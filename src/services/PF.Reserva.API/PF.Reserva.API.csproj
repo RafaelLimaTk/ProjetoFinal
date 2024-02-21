@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.27" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.27" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.27">
@@ -28,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\building blocks\PF.Core\PF.Core.csproj" />
+    <ProjectReference Include="..\..\building blocks\PF.MessageBus\PF.MessageBus.csproj" />
   </ItemGroup>
 
 </Project>

@@ -12,28 +12,28 @@ public class ReserveRepository : IReserveRepository
         _context = context;
     }
 
-    public IUnitOfWork UnitOfWork => throw new NotImplementedException();
+    public IUnitOfWork UnitOfWork => _context;
 
-    public async Task<IEnumerable<Reserve>> GetAll()
+    public async Task<IEnumerable<Reserver>> GetAll()
     {
         return await _context.Reserves.AsNoTracking().ToListAsync();
     }
 
-    public async Task<Reserve> GetById(Guid id)
+    public async Task<Reserver> GetById(Guid id)
     {
         return await _context.Reserves.FindAsync(id);
     }
 
-    public void Add(Reserve reserve)
+    public void Add(Reserver reserve)
     {
         _context.Reserves.Add(reserve);
     }
-    public void Update(Reserve reserve)
+    public void Update(Reserver reserve)
     {
         _context.Reserves.Update(reserve);
     }
 
-    public void Delete(Reserve reserve)
+    public void Delete(Reserver reserve)
     {
         _context.Reserves.Remove(reserve);
     }
