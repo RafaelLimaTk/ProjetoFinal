@@ -45,16 +45,17 @@ public class Reserver : Entity, IAggregateRoot
 
     public void CancelReservation(DateTime currentDate)
     {
-        TimeSpan difference = StartDate - currentDate;
-        if (difference.TotalDays >= 7)
+        var startDate = StartDate - currentDate;
+
+        if (startDate.TotalDays >= 7)
         {
             Status = ReservationStatus.Cancelled;
         }
         else
         {
-            decimal cancellationFee = TotalPrice * (CANCELLATION_FREE_PERCENTAGE / 100);
-            decimal refundAmount = TotalPrice - cancellationFee;
-            TotalPrice -= refundAmount;
+            var diferention = TotalPrice * (CANCELLATION_FREE_PERCENTAGE / 100);
+            var valor = TotalPrice - diferention;
+            TotalPrice -= valor;
             Status = ReservationStatus.CancelledWithFee;
         }
     }
