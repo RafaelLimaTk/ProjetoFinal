@@ -38,7 +38,8 @@ public class ReserveIntegrationHandler : BackgroundService
 
     private async Task<ResponseMessage> ReservationStarted(ReservationStartedIntegrationEvent message)
     {
-        var clienteCommand = new AddReserveCommand(message.EstablishmentId, message.StartDate, message.EndDate, message.NumberOfPeople, message.TotalPrice, message.Comments);
+        var clienteCommand = new AddReserveCommand(
+            message.EstablishmentId, message.StartDate, message.EndDate, message.NumberOfPeople, message.TotalPrice, message.Comments, message.QuantityPeople);
         ValidationResult sucesso;
 
         using (var scope = _serviceProvider.CreateScope())

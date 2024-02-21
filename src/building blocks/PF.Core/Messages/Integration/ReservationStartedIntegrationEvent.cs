@@ -9,6 +9,8 @@ public class ReservationStartedIntegrationEvent : IntegrationEvent
     public decimal TotalPrice { get; private set; }
     public string Comments { get; private set; }
 
+    public int QuantityPeople { get; set; }
+
     public ReservationStartedIntegrationEvent(
         Guid establishmentId, DateTime startDate, DateTime endDate, int numberOfPeople, decimal totalPrice, string comments)
     {

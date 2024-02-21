@@ -1,7 +1,6 @@
 ﻿using FluentValidation.Results;
 using MediatR;
 using PF.Core.Messages;
-using PF.Estabelecimento.API.Application.Events;
 using PF.Estabelecimento.API.Models;
 
 namespace PF.Estabelecimento.API.Application.Commands;

@@ -20,7 +20,7 @@ public class ReserveCommandHandler : CommandHandler, IRequestHandler<AddReserveC
         var reserve = new Reserver(
             message.EstablishmentId, message.StartDate, message.EndDate, message.NumberOfPeople, message.TotalPrice, message.Comments);
 
-        if (!ValidateReserve(reserve)) return ValidationResult;
+        if (!ValidateReserve(reserve, message.QuantityPeople)) return ValidationResult;
 
         reserve.CalculateTotalPrice();
 
@@ -29,11 +29,9 @@ public class ReserveCommandHandler : CommandHandler, IRequestHandler<AddReserveC
         return await PersistenceData(_reserveRepository.UnitOfWork);
     }
 
-    private bool ValidateReserve(Reserver reserve)
+    private bool ValidateReserve(Reserver reserve, int quantityPeople)
     {
-        var numberOfPeople = reserve.NumberOfPeople;
-
-        if (!reserve.CheckCapacity(numberOfPeople))
+        if (!reserve.CheckCapacity(quantityPeople))
         {
             AddErro("A quantidade de pessoas é maior do que o estabelecimento suporta");
             return false;

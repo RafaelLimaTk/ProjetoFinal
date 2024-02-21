@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using PF.Core.Messages;
-using PF.Reserva.API.Models;
 
 namespace PF.Reserva.API.Application.Commands;
 
@@ -13,8 +12,10 @@ public class AddReserveCommand : Command
     public decimal TotalPrice { get; set; }
     public string Comments { get; set; }
 
+    public int QuantityPeople { get; set; }
+
     public AddReserveCommand(
-        Guid establishmentId, DateTime startDate, DateTime endDate, int numberOfPeople, decimal totalPrice, string comments)
+        Guid establishmentId, DateTime startDate, DateTime endDate, int numberOfPeople, decimal totalPrice, string comments, int quantityPeople)
     {
         AggregateId = establishmentId;
         EstablishmentId = establishmentId;
@@ -23,6 +24,7 @@ public class AddReserveCommand : Command
         NumberOfPeople = numberOfPeople;
         TotalPrice = totalPrice;
         Comments = comments;
+        QuantityPeople = quantityPeople;
     }
 
     public override bool IsValid()

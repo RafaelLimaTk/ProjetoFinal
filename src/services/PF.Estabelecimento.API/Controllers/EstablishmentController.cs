@@ -3,6 +3,7 @@ using PF.Core.Mediator;
 using PF.Core.Messages.Integration;
 using PF.Estabelecimento.API.Application.Commands;
 using PF.Estabelecimento.API.Application.DTOs;
+using PF.Estabelecimento.API.Application.Queries;
 using PF.Estabelecimento.API.Controllers.Base;
 using PF.Estabelecimento.API.Models;
 using PF.MessageBus;
@@ -11,27 +12,30 @@ namespace PF.Estabelecimento.API.Controllers;
 
 public class EstablishmentController : MainController
 {
-    private readonly IEstablishmentRepository _establishmentRepository;
+    private readonly IEstablishmentQueries _establishmentQueries;
     private readonly IMediatorHandler _mediatorHandler;
     private readonly IMessageBus _bus;
 
-    public EstablishmentController(IEstablishmentRepository establishmentRepository, IMediatorHandler mediatorHandler, IMessageBus bus)
+    public EstablishmentController(IEstablishmentQueries establishmentQueries, IMediatorHandler mediatorHandler, IMessageBus bus)
     {
-        _establishmentRepository = establishmentRepository;
+        _establishmentQueries = establishmentQueries;
         _mediatorHandler = mediatorHandler;
         _bus = bus;
     }
 
     [HttpGet("estabelecimentos")]
-    public async Task<IEnumerable<Establishment>> Index()
+    public async Task<IActionResult> Index()
     {
-        return await _establishmentRepository.GetAll();
+        var establishments = await _establishmentQueries.GetAll();
+
+        return establishments == null ? NotFound() : CustomResponse(establishments);
     }
 
     [HttpGet("detalhe-estabelecimento/{id}")]
-    public async Task<Establishment> EstablishmentDetail(Guid id)
+    public async Task<IActionResult> EstablishmentDetail(Guid id)
     {
-        return await _establishmentRepository.GetById(id);
+        var establishment = await _establishmentQueries.GetById(id);
+        return establishment == null ? NotFound() : CustomResponse(establishment);
     }
 
     [HttpPost("adicionar-estabelecimento")]
@@ -66,6 +70,9 @@ public class EstablishmentController : MainController
     {
         var createReserve = new ReservationStartedIntegrationEvent(
             establishment.EstablishmentId, establishment.StartDate, establishment.EndDate, establishment.NumberOfPeople, establishment.TotalPrice, establishment.Comments);
+
+        var establishmentExisti = await _establishmentQueries.GetById(establishment.EstablishmentId);
+        if (establishmentExisti != null) createReserve.QuantityPeople = establishmentExisti.QuantityPeople;
 
         return await _bus.RequestAsync<ReservationStartedIntegrationEvent, ResponseMessage>(createReserve);
     }

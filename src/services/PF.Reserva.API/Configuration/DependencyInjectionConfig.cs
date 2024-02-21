@@ -2,6 +2,8 @@
 using MediatR;
 using PF.Core.Mediator;
 using PF.Reserva.API.Application.Commands;
+using PF.Reserva.API.Application.Mappings;
+using PF.Reserva.API.Application.Queries;
 using PF.Reserva.API.Data;
 using PF.Reserva.API.Data.Repository;
 using PF.Reserva.API.Models;
@@ -16,7 +18,11 @@ public static class DependencyInjectionConfig
 
         Services.AddScoped<IRequestHandler<AddReserveCommand, ValidationResult>, ReserveCommandHandler>();
 
+        Services.AddScoped<IReserveQueries, ReservaQueries>();
+
         Services.AddScoped<IReserveRepository, ReserveRepository>();
         Services.AddScoped<ReserveContext>();
+
+        Services.AddAutoMapper(typeof(DomainToDTOMappingProfile));
     }
 }
